@@ -8,8 +8,8 @@ public class PatrolState : IState<Bot>
 
     public void OnEnter(Bot t)
     {
-        t.ChangeAnim(Constant.ANIM_RUN);
         targetBrick = Random.Range(3, 13);
+        t.ChangeAnim(Constant.ANIM_RUN);
         SeekTarget(t);
     }
 
@@ -17,13 +17,13 @@ public class PatrolState : IState<Bot>
     {
         if (t.CheckDesination())
         {
-            if (t.GetBrickCount() >= targetBrick)
+            if (t.GetBrickCount() < targetBrick)
             {
-                t.ChangeState(new AttackState());
+                SeekTarget(t);
             }
             else
             {
-                SeekTarget(t);
+                t.ChangeState(new AttackState());
             }
         }
     }

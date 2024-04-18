@@ -16,11 +16,13 @@ public class Bot : Character
         ChangeAnim(Constant.ANIM_IDLE);
     }
 
-    void Update()
+    private void Update()
     {
-        if (currentState != null)
+        if (currentState != null && GameManager.Ins.IsState(GameState.Gameplay))
         {
             currentState.OnExecute(this);
+            //check stair
+            CheckMove(TF.position);
         }
     }
 
