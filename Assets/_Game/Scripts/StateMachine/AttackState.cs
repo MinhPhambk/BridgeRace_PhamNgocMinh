@@ -2,21 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : IState<Character>
+public class AttackState : IState<Bot>
 {
-    public void OnEnter(Character t)
+    public void OnEnter(Bot t)
     {
-
+        t.SetDestination(LevelManager.Ins.GetCurrentLevel().GetEndPosition());
     }
 
-    public void OnExecute(Character t)
+    public void OnExecute(Bot t)
     {
-
+        if (t.GetBrickCount() == 0)
+        {
+            t.ChangeState(new PatrolState());
+        }
     }
 
-    public void OnExit(Character t)
+    public void OnExit(Bot t)
     {
-
     }
-
 }
