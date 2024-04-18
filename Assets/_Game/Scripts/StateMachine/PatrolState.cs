@@ -8,7 +8,7 @@ public class PatrolState : IState<Bot>
 
     public void OnEnter(Bot t)
     {
-        targetBrick = Random.Range(3, 13);
+        targetBrick = Random.Range(1, 12);
         t.ChangeAnim(Constant.ANIM_RUN);
         SeekTarget(t);
     }

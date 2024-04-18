@@ -12,4 +12,9 @@ public class Level : MonoBehaviour
     {
         return finishPosotion.position;
     }
+
+    public NavMeshData GetNavMesh()
+    {
+        return navMeshData;
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
 
 public class Character : ColorObject
 {
@@ -54,24 +55,26 @@ public class Character : ColorObject
 
     protected bool CheckMove(Vector3 newPosition)
     {
+        bool moved = true;
+
         if (Physics.Raycast(newPosition, Vector3.down, out RaycastHit hit, 2f, stairLayer))
         {
-            Stair stair = hit.collider.GetComponent<Stair>();
+            Stair stair = hit.collider.gameObject.GetComponent<Stair>();
 
-            if (stair.color != this.color && bricks.Count > 0 && TF.forward.z > 0)
+            if (stair.color != this.color && bricks.Count > 0)
             {
+                stair.ChangeColor(color);
                 RemoveBrick();
-                stair.ChangeColor(this.color);
-                stage.GenerateBrickWithColor(this.color);
+                stage.GenerateBrickWithColor(color);
             }
 
             if (stair.color != this.color && bricks.Count == 0 && TF.forward.z > 0)
             {
-                return false;
+                moved = false;
             }
         }
 
-        return true;
+        return moved;
     }
 
     protected Vector3 NextMove(Vector3 newPosition)
@@ -123,7 +126,7 @@ public class Character : ColorObject
         stopped = true;
     }
 
-    public void Move()
+    public virtual void Move()
     {
         stopped = false;
     }

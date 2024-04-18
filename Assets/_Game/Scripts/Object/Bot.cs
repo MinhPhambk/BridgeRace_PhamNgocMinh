@@ -18,12 +18,14 @@ public class Bot : Character
 
     private void Update()
     {
-        if (currentState != null && GameManager.Ins.IsState(GameState.Gameplay))
+        if (!stopped)
         {
-            currentState.OnExecute(this);
-            //check stair
-            CheckMove(TF.position);
+            if (currentState != null && GameManager.Ins.IsState(GameState.Gameplay) && CheckMove(TF.position))
+            {
+                currentState.OnExecute(this);
+            }
         }
+            
     }
 
     public void ChangeState(IState<Bot> state)
@@ -43,7 +45,7 @@ public class Bot : Character
 
     public bool CheckDesination()
     {
-        return Vector3.Distance(destionation, Vector3.right * TF.position.x + Vector3.forward * TF.position.z) < 0.1f;
+        return Vector3.Distance(destionation, new Vector3(TF.position.x, 0, TF.position.z)) < 0.01f;
     }
 
     public void SetDestination(Vector3 pos)

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = System.Random;
 
 public class LevelManager : Singleton<LevelManager>
@@ -27,6 +28,15 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         currentLevel = Instantiate(levelPrefabs[idx]);
+        InitNavMesh();
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i] is Bot)
+            {
+                (characters[i] as Bot).ChangeState(new PatrolState());
+            }
+        }
     }
 
     public void ActiveCharacter()
@@ -58,6 +68,11 @@ public class LevelManager : Singleton<LevelManager>
         for (int i = 0; i < characters.Length; i++)
         {
             characters[i].Move();
+            
+            if (characters[i] is Bot && currentLevel!= null)
+            {
+                (characters[i] as Bot).ChangeState(new PatrolState());
+            }
         }
     }
 
@@ -92,12 +107,25 @@ public class LevelManager : Singleton<LevelManager>
         {
             characters[i].ClearBrick();
             characters[i].TF.rotation = Quaternion.identity;
-            characters[i].TF.position = characterTransform.position + new Vector3(-6 + i * 4, 0, 0);
+            characters[i].TF.position = characterTransform.position + new Vector3(-6 + i * 4, 0, 0); 
+            
+            if (characters[i] is Bot)
+            {
+                (characters[i] as Bot).ChangeState(null);
+            }
+            
+            characters[i].ChangeAnim(Constant.ANIM_IDLE);
         }
     }
 
     public Level GetCurrentLevel()
     {
         return this.currentLevel;
+    }
+
+    public void InitNavMesh()
+    {
+        NavMesh.RemoveAllNavMeshData();
+        NavMesh.AddNavMeshData(currentLevel.GetNavMesh());
     }
 }
